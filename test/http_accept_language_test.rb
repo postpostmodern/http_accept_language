@@ -23,6 +23,11 @@ class HttpAcceptLanguageTest < Test::Unit::TestCase
     request.env['HTTP_ACCEPT_LANGUAGE'] = 'odkhjf89fioma098jq .,.,'
     assert_equal [], request.user_preferred_languages
   end
+  
+  def test_should_accept_numeric_regions
+    request.env['HTTP_ACCEPT_LANGUAGE'] = 'es-419,es;q=0.8,en-US;q=0.6,en;q=0.4'
+    assert_equal %w{es-419 es en-US en}, request.user_preferred_languages
+  end
 
   def test_should_find_first_available_language
     assert_equal 'en-GB', request.preferred_language_from(%w{en en-GB})

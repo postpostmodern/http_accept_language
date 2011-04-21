@@ -13,7 +13,7 @@ module HttpAcceptLanguage
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
     end.sort do |x,y|
-      raise "Not correctly formatted" unless x.first =~ /^[a-z\-]+$/i
+      raise "Not correctly formatted" unless x.first =~ /^[a-z\*]{1,8}(-[a-z0-9\*]{1,8})*$/i
       y.last.to_f <=> x.last.to_f
     end.collect do |l|
       l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
