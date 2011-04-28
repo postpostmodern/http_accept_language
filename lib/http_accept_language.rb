@@ -47,7 +47,21 @@ module HttpAcceptLanguage
   #   request.compatible_language_from I18n.available_locales
   #
   def compatible_language_from(available_languages)
-    user_preferred_languages.map do |preferred|
+    # The RFC 2616 way:
+    # user_preferred_languages.map do |preferred|
+    #   available_languages.find do |available|
+    #     available.to_s =~ /^#{Regexp.escape(preferred.to_s)}(-|$)/
+    #   end
+    # end.compact.first
+    
+    # The hacked for IE way:
+    # Forces this recommendation http://www.w3.org/International/questions/qa-lang-priorities#langtagdetail
+    generic_user_preferred_languages = []
+    user_preferred_languages.map do |preferred| 
+      generic_user_preferred_languages<< preferred.to_s
+      generic_user_preferred_languages<< preferred.to_s.split('-').first if preferred =~ /-/
+    end
+    generic_user_preferred_languages.map do |preferred|
       available_languages.find do |available|
         available.to_s =~ /^#{Regexp.escape(preferred.to_s)}(-|$)/
       end
